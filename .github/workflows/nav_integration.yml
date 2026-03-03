@@ -3,7 +3,11 @@ name: nav_integration
 on:
   push:
     branches: [main, master]
+    tags: ["v*"]
   pull_request:
+
+permissions:
+  contents: write
 
 jobs:
   gazebo_nav_integration:
@@ -52,3 +56,28 @@ jobs:
           source install/setup.bash
           colcon test --packages-select ultrasonic_array --event-handlers console_cohesion+
           colcon test-result --verbose
+
+      - name: Package software artifact
+        run: |
+          ARTIFACT_NAME="ultrasonic-array-${GITHUB_SHA:0:7}-ros2-${ROS_DISTRO}.tar.gz"
+          tar -czf "${ARTIFACT_NAME}" \
+            install/ \
+            ultrasonic_array/package.xml \
+            ultrasonic_array/config/lidar_proc.yaml \
+            README.md \
+            VVR-008.md
+          echo "ARTIFACT_NAME=${ARTIFACT_NAME}" >> "${GITHUB_ENV}"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ultrasonic-array-${{ github.sha }}
+          path: ${{ env.ARTIFACT_NAME }}
+          retention-days: 30
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ARTIFACT_NAME }}
+          generate_release_notes: true
