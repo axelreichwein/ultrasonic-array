@@ -37,7 +37,7 @@ jobs:
         run: |
           source /opt/ros/${ROS_DISTRO}/setup.bash
           rosdep update
-          rosdep install --from-paths . -i -y
+          rosdep install --from-paths . --ignore-src -r -y
 
       - name: Build workspace
         run: |
