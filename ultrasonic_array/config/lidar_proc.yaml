@@ -1,0 +1,17 @@
+lidar_proc:
+  ros__parameters:
+    sensor_count: 4
+    process_hz: 10.0
+    emergency_stop_mm: 150.0
+    stopping_margin_mm: 50.0
+    min_valid_mm: 20.0
+    max_valid_mm: 4000.0
+    raw_topic: /ultrasonic/raw_mm
+    scan_topic: /scan
+    emergency_stop_topic: /an/emergency_stop
+    nearest_topic: /an/nearest_obstacle_mm
+    plc_topic: /an/plc/estop_req
+    cmd_vel_topic: /cmd_vel
+    frame_id: base_link
+    publish_stop_cmd: true
+    fov_deg: 90.0
