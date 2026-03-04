@@ -5,8 +5,11 @@ if [[ -z "${ROS_DISTRO:-}" ]]; then
   ROS_DISTRO=humble
 fi
 
+# ROS setup scripts may read optional vars that are unset, so avoid nounset here.
+set +u
 source "/opt/ros/${ROS_DISTRO}/setup.bash"
 source install/setup.bash
+set -u
 
 WORLD_FILE="ultrasonic_array/simulation/corridor.world"
 
